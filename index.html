@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sorgu Defteri — SQL, Python ve Veri Analizi Pratiği</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--ink:#0f172a;--mute:#64748b;--line:#e2e8f0;--soft:#f8fafc;--code:#f1f5f9;--Kolay:#15803d;--Orta:#b45309;--Zor:#b91c1c;--r:14px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font:15.5px/1.55 "Plus Jakarta Sans","Segoe UI",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.top{position:sticky;top:0;z-index:5;background:#ffffffee;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;padding:10px clamp(14px,3vw,32px);flex-wrap:wrap}
+.brand{font-weight:800;font-size:1.2rem;letter-spacing:-.02em;margin-right:auto}
+.seg{display:inline-flex;background:var(--code);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:5px 12px;border-radius:8px;font-size:.88rem}
+.seg button[aria-pressed=true]{background:#fff;box-shadow:0 1px 3px #0002;font-weight:600}
+.mn{position:relative}.mn summary{list-style:none;cursor:pointer;border:1px solid var(--line);border-radius:10px;padding:5px 12px}
+.mn summary::-webkit-details-marker{display:none}
+.mn div{position:absolute;right:0;top:110%;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:4px;min-width:200px;box-shadow:0 10px 30px #0f172a1f}
+.mn button,.mn label{border:0;background:none;text-align:left;padding:7px 10px;border-radius:8px}
+.mn button:hover,.mn label:hover{background:var(--code)}
+.sy{font-size:.78rem;color:var(--mute);padding:4px 10px}
+main{max-width:1180px;margin:0 auto;padding:22px clamp(14px,3vw,32px) 70px}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;margin-bottom:22px}
+.pie{--bg:none;width:170px;height:170px;border-radius:50%;background:var(--bg);display:grid;place-items:center;box-shadow:0 0 0 6px #fff,0 0 0 7px var(--line)}
+.pie div{width:84px;height:84px;background:#fff;border-radius:50%;display:grid;place-items:center;text-align:center;line-height:1.1}
+.pie b{font-size:1.5rem}.pie small{color:var(--mute);font-size:.72rem}
+h1{font-size:clamp(1.6rem,3.6vw,2.3rem);letter-spacing:-.03em;line-height:1.1;margin:0 0 6px;font-weight:800}
+.sub{color:var(--mute);margin:0 0 12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.ac{--c:#000;text-align:left;background:color-mix(in srgb,var(--c) 7%,#fff);border:1.5px solid color-mix(in srgb,var(--c) 22%,#fff);border-radius:var(--r);padding:11px 12px;display:flex;gap:10px;align-items:center}
+.ac[aria-pressed=true]{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 18%,transparent)}
+.mp{width:38px;height:38px;border-radius:50%;flex:none}
+.ac b{display:block;line-height:1.2}.ac small{color:var(--mute)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:18px 0 12px}
+input[type=search]{font:inherit;padding:8px 14px;border:1px solid var(--line);border-radius:10px;flex:1;min-width:150px}
+.tp{border:1px solid var(--line);border-radius:var(--r);margin-bottom:12px}
+.tp summary{padding:10px 14px;cursor:pointer;font-weight:600}
+.tl{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 14px;padding:0 14px 12px}
+.tl label{display:flex;gap:8px;align-items:center}.tl input{width:17px;height:17px;accent-color:var(--c)}
+.tl input:checked+span{color:var(--mute);text-decoration:line-through}
+.row{--c:#000;display:grid;grid-template-columns:22px 1fr auto auto;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:4px solid var(--c);border-radius:12px;padding:11px 14px;margin-bottom:8px;transition:box-shadow .15s,transform .15s}
+.row:hover{box-shadow:0 6px 18px #0f172a14;transform:translateY(-1px)}
+.dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line)}
+.ok .dot{background:var(--c);border-color:var(--c);box-shadow:inset 0 0 0 4px #fff}
+.rt{font-weight:600}.rt small{display:block;color:var(--mute);font-weight:400}
+.chip{font-size:.74rem;border-radius:20px;padding:1px 9px;background:var(--code);color:var(--mute);white-space:nowrap}
+.lv{font-size:.82rem;font-weight:700;min-width:44px;text-align:right}
+.Kolay{color:var(--Kolay)}.Orta{color:var(--Orta)}.Zor{color:var(--Zor)}
+.empty{color:var(--mute);text-align:center;padding:26px}
+.bk{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.bk button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 12px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;background:#fff}
+.card h2{margin:0 0 8px;font-size:1.35rem;letter-spacing:-.02em}
+.card h3{font-size:.95rem;margin:18px 0 8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tw{margin-bottom:12px}.tn{font:500 .85rem "JetBrains Mono",monospace;margin-bottom:4px}
+.sc{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{padding:5px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--soft)}th small{display:block;color:var(--mute);font:400 .7rem "JetBrains Mono",monospace}
+tr:last-child td{border-bottom:0}td i{color:var(--mute)}
+.hint{margin-top:12px;border:1px dashed var(--line);border-radius:10px;padding:8px 12px}
+.hint summary{cursor:pointer;font-weight:600}
+.eh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+textarea{width:100%;min-height:260px;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px;font:13.5px/1.6 "JetBrains Mono",Consolas,monospace;resize:vertical;color:var(--ink)}
+pre{background:var(--code);border-radius:10px;padding:12px;overflow-x:auto;margin:10px 0 0;font:13.5px/1.6 "JetBrains Mono",Consolas,monospace}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.acts button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 14px}
+.acts .p{background:var(--c);border-color:var(--c);color:#fff;font-weight:600}
+.note{font-size:.8rem;color:var(--mute);margin-top:8px}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.hero{grid-template-columns:1fr;justify-items:center;text-align:center}.row{grid-template-columns:22px 1fr auto}.row .chip{display:none}.card{padding:14px}}
+
+.hero2{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.hb{background:linear-gradient(135deg,#0f172a,#312e81);color:#fff;border-radius:18px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:18px}
+.hb h1{color:#fff}.hb p{color:#cbd5e1;margin:0}.chip.dk{background:#3b82f633;color:#bfdbfe;align-self:flex-start}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;border-top:1px solid #ffffff22;padding-top:14px}
+.stats small{color:#94a3b8;display:block}.stats b{font-size:1.8rem}.stats .g{color:#34d399}.stats .bl{color:#60a5fa}
+.pc{border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.lg{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.8rem}.lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.ed{background:#0f172a;border-color:#1e293b;color:#e2e8f0}
+.ed textarea{background:#020617;color:#6ee7b7;border-color:#1e293b}
+.out{background:#fff;color:var(--ink);border-radius:10px;padding:10px;margin-top:12px}.out:empty{display:none}
+.out .sc{margin-top:6px}.ot{font-size:.8rem;color:var(--mute);margin-top:8px}
+.vd{padding:8px 12px;border-radius:8px;font-weight:600}
+.vd.ok{background:#dcfce7;color:#166534}.vd.bad{background:#fee2e2;color:#991b1b}.vd.info{background:#e0f2fe;color:#075985}.vd.warn{background:#fef3c7;color:#92400e}
+@media (max-width:900px){.hero2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">Sorgu Defteri</div>
+  <div class="seg" id="dl" role="group" aria-label="SQL sistemi"></div>
+  <details class="mn"><summary>Ayarlar</summary><div>
+    <span class="sy" id="sync"></span>
+    <button type="button" id="exp">Yedeği indir (.json)</button>
+    <label>Yedeği yükle<input type="file" id="imp" accept=".json" hidden></label>
+    <button type="button" id="reset">İlerlemeyi sıfırla</button></div></details>
+</header>
+<main id="root"></main>
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.14.2/dist/sql-asm.js"></script>
+<script>
+const AREAS={sql:{n:"SQL",c:"#2563eb",d:"Sorgu yazma: filtreleme, JOIN, window fonksiyonları ve iş sorularına çeviri."},py:{n:"Python",c:"#16a34a",d:"Veri işlerinde en çok kullanılan yapılar: koleksiyonlar, fonksiyonlar, regex, dekoratörler."},pd:{n:"pandas",c:"#ea580c",d:"DataFrame ile temizleme, birleştirme, gruplama ve zaman serileri."},st:{n:"İstatistik",c:"#9333ea",d:"Analistin günlük işi: özet metrikler, test mantığı ve yorumlama."}};
+const TOPICS={
+sql:["SELECT, WHERE, ORDER BY","JOIN türleri","GROUP BY ve HAVING","Alt sorgular","CTE (WITH)","Window fonksiyonları","CASE WHEN","Tarih fonksiyonları","NULL yönetimi","Index ve sorgu performansı"],
+py:["Veri tipleri ve döngüler","List / dict comprehension","Fonksiyonlar ve lambda","Dosya okuma / yazma","try / except","Modüller ve sanal ortam","OOP temelleri","Regex","Dekoratörler","API'den veri çekme"],
+pd:["DataFrame temelleri","Veri temizleme","merge / concat","groupby ve pivot_table","Tarih serileri","Rolling / shift","Görselleştirme (matplotlib)","Performans: vektörizasyon"],
+st:["Ortalama, medyan, standart sapma","Dağılımlar ve normallik","Korelasyon ve nedensellik","Hipotez testi ve p-değeri","A/B testi tasarımı","Güven aralığı","Örneklem büyüklüğü","Simpson paradoksu"]};
+const D={
+employees:{c:[["id","int"],["name","varchar"],["dept","varchar"],["salary","int"],["manager_id","int"],["hire_date","date"]],r:[[1,"Ayşe Kaya","Yönetim",90000,null,"2019-03-01"],[2,"Mert Demir","IT",70000,1,"2020-06-15"],[3,"Elif Şahin","IT",65000,2,"2021-01-10"],[4,"Can Yıldız","IT",65000,2,"2022-09-05"],[5,"Zeynep Aydın","Finans",60000,1,"2020-11-20"],[6,"Burak Çelik","Finans",52000,5,"2023-02-01"]]},
+customers:{c:[["id","int"],["name","varchar"],["city","varchar"],["signup_date","date"]],r:[[1,"Ali","İstanbul","2024-11-05"],[2,"Ayla","Ankara","2025-01-03"],[3,"Berk",null,"2025-01-08"],[4,"Cem","İstanbul","2025-02-14"],[5,"Deniz","İzmir","2025-03-02"]]},
+orders:{c:[["id","int"],["customer_id","int"],["amount","int"],["order_date","date"],["status","varchar"]],r:[[1,1,1200,"2025-01-02","completed"],[2,1,300,"2025-01-05","completed"],[3,2,800,"2025-01-05","cancelled"],[4,2,2500,"2025-02-10","completed"],[5,4,150,"2025-02-11","completed"],[6,1,900,"2025-03-01","completed"],[7,4,600,"2025-03-15","completed"],[8,3,400,"2025-01-09","completed"]]},
+products:{c:[["id","int"],["name","varchar"],["category","varchar"],["price","int"]],r:[[1,"Kulaklık","Elektronik",1500],[2,"Kahve Makinesi","Ev",2200],[3,"Klavye","Elektronik",800],[4,"Termos","Ev",350],[5,"Defter","Kırtasiye",60],[6,"Poster","Kırtasiye",90]]},
+order_items:{c:[["order_id","int"],["product_id","int"],["qty","int"]],r:[[1,1,1],[1,3,1],[2,4,2],[4,2,1],[4,4,1],[5,5,3],[6,1,1],[6,3,1],[7,3,1]]},
+logins:{c:[["user_id","int"],["login_date","date"]],r:[[1,"2025-03-01"],[1,"2025-03-02"],[1,"2025-03-03"],[1,"2025-03-07"],[2,"2025-03-01"],[2,"2025-03-03"],[2,"2025-03-04"],[3,"2025-04-02"]]},
+tweets:{c:[["tweet_id","int"],["user_id","int"],["msg","varchar"],["tweet_date","timestamp"]],r:[[214252,111,"Am considering taking Tesla private at $420. Funding secured.","2021-12-30 00:00:00"],[739252,111,"Despite the constant negative press covfefe","2022-01-01 00:00:00"],[846402,111,"Following @NickSinghTech on Twitter changed my life!","2022-02-14 00:00:00"],[241425,254,"If the salary is so competitive why won’t you tell me what it is?","2022-03-01 00:00:00"],[231574,148,"I no longer have a manager. I can't be managed","2022-03-23 00:00:00"]]}};
+const SQLP=[
+{id:"q31",lv:"Kolay",g:"GROUP BY",t:"Tweet histogramı",tb:["tweets"],q:"",h:"Önce kullanıcı başına tweet sayısını bir CTE veya alt sorguda hesapla, sonra bu sayılara göre tekrar grupla.",s:"WITH c AS (\n  SELECT user_id, COUNT(tweet_id) AS tweet_bucket\n  FROM tweets\n  WHERE tweet_date >= '2022-01-01' AND tweet_date < '2023-01-01'\n  GROUP BY user_id)\nSELECT tweet_bucket, COUNT(user_id) AS users_num\nFROM c\nGROUP BY tweet_bucket;"},
+{id:"q1",lv:"Kolay",g:"WHERE",t:"IT çalışanları",tb:["employees"],q:"IT departmanında çalışanların adını ve maaşını, maaşa göre büyükten küçüğe sırala.",s:"SELECT name, salary\nFROM employees\nWHERE dept = 'IT'\nORDER BY salary DESC;"},
+{id:"q2",lv:"Kolay",g:"GROUP BY",t:"Şehre göre müşteri sayısı",tb:["customers"],q:"Şehri bilinen müşterileri şehir bazında say, en kalabalık şehir üstte olsun.",s:"SELECT city, COUNT(*) AS musteri_sayisi\nFROM customers\nWHERE city IS NOT NULL\nGROUP BY city\nORDER BY musteri_sayisi DESC;"},
+{id:"q3",lv:"Kolay",g:"SUM",t:"Tamamlanan siparişlerin cirosu",tb:["orders"],q:"Durumu 'completed' olan siparişlerin toplam tutarını bul.",s:"SELECT SUM(amount) AS ciro\nFROM orders\nWHERE status = 'completed';"},
+{id:"q4",lv:"Kolay",g:"TOP / LIMIT",t:"En pahalı 3 ürün",tb:["products"],q:"Fiyatı en yüksek 3 ürünü listele.",h:"PostgreSQL'de LIMIT, SQL Server'da TOP kullanılır.",s:"SELECT {{TOP 3}}name, price\nFROM products\nORDER BY price DESC{{LIMIT 3}};"},
+{id:"q5",lv:"Kolay",g:"GROUP BY",t:"Departman bazında ortalama maaş",tb:["employees"],q:"Her departmanın ortalama maaşını yüksekten düşüğe listele.",s:"SELECT dept, AVG(salary) AS ort_maas\nFROM employees\nGROUP BY dept\nORDER BY ort_maas DESC;"},
+{id:"q6",lv:"Kolay",g:"LEFT JOIN",t:"Siparişi olmayan müşteriler",tb:["customers","orders"],q:"Hiç siparişi olmayan müşterileri bul.",h:"LEFT JOIN yap, eşleşmeyenleri IS NULL ile ayıkla.",s:"SELECT c.id, c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL;"},
+{id:"q7",lv:"Kolay",g:"HAVING",t:"Yüksek harcama yapan müşteriler",tb:["orders"],q:"Tamamlanan siparişlerinin toplamı 1000'den büyük olan müşteri id'lerini listele.",h:"Toplam üzerindeki koşul HAVING'de olur.",s:"SELECT customer_id, SUM(amount) AS toplam\nFROM orders\nWHERE status = 'completed'\nGROUP BY customer_id\nHAVING SUM(amount) > 1000;"},
+{id:"q8",lv:"Kolay",g:"CASE WHEN",t:"Müşteri segmentleri",tb:["orders"],q:"Müşteri başına tamamlanan sipariş toplamı 2000+ ise 'Gold', 1000-1999 ise 'Silver', altı 'Bronze' olsun.",s:"SELECT customer_id, SUM(amount) AS toplam,\n  CASE WHEN SUM(amount) >= 2000 THEN 'Gold'\n       WHEN SUM(amount) >= 1000 THEN 'Silver'\n       ELSE 'Bronze' END AS segment\nFROM orders\nWHERE status = 'completed'\nGROUP BY customer_id;"},
+{id:"q9",lv:"Kolay",g:"GROUP BY",t:"Kategori özeti",tb:["products"],q:"Her kategorideki ürün sayısını ve ortalama fiyatı (yuvarlanmış) göster.",s:"SELECT category, COUNT(*) AS urun_sayisi,\n  ROUND(AVG(price), 0) AS ort_fiyat\nFROM products\nGROUP BY category;"},
+{id:"q10",lv:"Kolay",g:"Oran",t:"İptal oranı",tb:["orders"],q:"Siparişlerin yüzde kaçı iptal edilmiş? Bir ondalık basamak göster.",h:"100.0 ile çarp, tamsayı bölmesine düşme.",s:"SELECT ROUND(100.0 * SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END)\n       / COUNT(*), 1) AS iptal_orani\nFROM orders;"},
+{id:"q11",lv:"Orta",g:"ROW_NUMBER",t:"Müşterinin ilk siparişi",tb:["orders"],q:"Her müşterinin ilk siparişini (tarihe göre) getir.",h:"PARTITION BY müşteri, ORDER BY tarih.",s:"WITH r AS (\n  SELECT *, ROW_NUMBER() OVER (\n    PARTITION BY customer_id ORDER BY order_date) AS rn\n  FROM orders)\nSELECT id, customer_id, amount, order_date, status FROM r WHERE rn = 1;"},
+{id:"q12",lv:"Orta",g:"Tarih",t:"Aylık ciro",tb:["orders"],q:"Tamamlanan siparişlerin aylık cirosunu ay başlangıç tarihiyle listele.",h:"Ay başlangıcı için DATE_TRUNC (PG) veya DATEFROMPARTS (MSSQL).",s:"SELECT {{MONTH}} AS ay, SUM(amount) AS ciro\nFROM orders\nWHERE status = 'completed'\nGROUP BY {{MONTH}}\nORDER BY ay;"},
+{id:"q13",lv:"Orta",g:"LAG",t:"Aylık ciro ve önceki aya göre değişim",tb:["orders"],q:"Aylık ciroyu ve bir önceki aya göre yüzde değişimi hesapla.",h:"Aylık toplamı CTE'de çıkar, sonra LAG.",s:"WITH m AS (\n  SELECT {{MONTH}} AS ay, SUM(amount) AS ciro\n  FROM orders WHERE status = 'completed'\n  GROUP BY {{MONTH}})\nSELECT ay, ciro,\n  ROUND(100.0 * (ciro - LAG(ciro) OVER (ORDER BY ay))\n        / LAG(ciro) OVER (ORDER BY ay), 1) AS degisim_yuzde\nFROM m;"},
+{id:"q14",lv:"Orta",g:"Window",t:"Kümülatif günlük ciro",tb:["orders"],q:"Günlük ciroyu ve o güne kadarki kümülatif toplamı göster.",s:"WITH d AS (\n  SELECT order_date, SUM(amount) AS ciro\n  FROM orders WHERE status = 'completed'\n  GROUP BY order_date)\nSELECT order_date, ciro,\n  SUM(ciro) OVER (ORDER BY order_date) AS kumulatif\nFROM d;"},
+{id:"q15",lv:"Orta",g:"DENSE_RANK",t:"Departmanda ikinci en yüksek maaş",tb:["employees"],q:"Her departmanda ikinci en yüksek maaşı alanları getir. Eşit maaşlar aynı sırayı paylaşsın.",s:"WITH r AS (\n  SELECT *, DENSE_RANK() OVER (\n    PARTITION BY dept ORDER BY salary DESC) AS rk\n  FROM employees)\nSELECT dept, name, salary FROM r WHERE rk = 2;"},
+{id:"q16",lv:"Orta",g:"Self join",t:"Çalışan ve yöneticisi",tb:["employees"],q:"Her çalışanın adını ve yöneticisinin adını listele. Yöneticisi olmayan da görünsün.",s:"SELECT e.name AS calisan, m.name AS yonetici\nFROM employees e\nLEFT JOIN employees m ON m.id = e.manager_id;"},
+{id:"q17",lv:"Orta",g:"Alt sorgu",t:"Ortalamanın üstünde maaş alanlar",tb:["employees"],q:"Şirket ortalamasının üzerinde maaş alan çalışanları bul.",s:"SELECT name, salary\nFROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);"},
+{id:"q18",lv:"Orta",g:"RANK",t:"Kategorinin en pahalı ürünü",tb:["products"],q:"Her kategorideki en pahalı ürünü getir.",s:"WITH r AS (\n  SELECT *, RANK() OVER (\n    PARTITION BY category ORDER BY price DESC) AS rk\n  FROM products)\nSELECT category, name, price FROM r WHERE rk = 1;"},
+{id:"q19",lv:"Orta",g:"JOIN",t:"En çok harcayan 3 müşteri",tb:["customers","orders"],q:"Tamamlanan siparişlere göre en çok harcayan 3 müşterinin adını ve toplamını getir.",s:"SELECT {{TOP 3}}c.name, SUM(o.amount) AS toplam\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'completed'\nGROUP BY c.id, c.name\nORDER BY toplam DESC{{LIMIT 3}};"},
+{id:"q20",lv:"Orta",g:"LEFT JOIN",t:"Ürün başına satış adedi",tb:["products","order_items"],q:"Her ürünün toplam satış adedini göster. Hiç satılmayanlar 0 görünsün.",h:"LEFT JOIN ve COALESCE.",s:"SELECT p.name, COALESCE(SUM(oi.qty), 0) AS adet\nFROM products p\nLEFT JOIN order_items oi ON oi.product_id = p.id\nGROUP BY p.id, p.name\nORDER BY adet DESC;"},
+{id:"q21",lv:"Orta",g:"COALESCE",t:"Boş şehirleri doldur",tb:["customers"],q:"Müşteri adı ve şehrini listele; şehri NULL olanlar için 'Bilinmiyor' yaz.",s:"SELECT name, COALESCE(city, 'Bilinmiyor') AS sehir\nFROM customers;"},
+{id:"q22",lv:"Orta",g:"ROW_NUMBER",t:"Müşterinin en yüksek 2 siparişi",tb:["orders"],q:"Her müşterinin en yüksek tutarlı 2 siparişini getir.",s:"WITH r AS (\n  SELECT *, ROW_NUMBER() OVER (\n    PARTITION BY customer_id ORDER BY amount DESC) AS rn\n  FROM orders)\nSELECT id, customer_id, amount, order_date, status FROM r WHERE rn <= 2;"},
+{id:"q23",lv:"Zor",g:"Gaps & islands",t:"Üst üste 3 gün giriş yapanlar",tb:["logins"],q:"En az 3 ardışık gün giriş yapan kullanıcıları bul.",h:"Tarih eksi satır numarası, ardışık günlerde sabit kalır.",s:"WITH g AS (\n  SELECT user_id, login_date,\n    login_date - CAST(ROW_NUMBER() OVER (\n      PARTITION BY user_id ORDER BY login_date) AS INT) AS grp\n  FROM logins)\nSELECT DISTINCT user_id\nFROM g\nGROUP BY user_id, grp\nHAVING COUNT(*) >= 3;",m:"WITH g AS (\n  SELECT user_id, login_date,\n    DATEADD(day, -ROW_NUMBER() OVER (\n      PARTITION BY user_id ORDER BY login_date), login_date) AS grp\n  FROM logins)\nSELECT DISTINCT user_id\nFROM g\nGROUP BY user_id, grp\nHAVING COUNT(*) >= 3;"},
+{id:"q24",lv:"Zor",g:"İş sorusu",t:"Tekrar alışveriş oranı",tb:["orders"],q:"Sipariş vermiş müşterilerin yüzde kaçı en az 2 tamamlanmış sipariş vermiş?",s:"WITH c AS (\n  SELECT customer_id, COUNT(*) AS n\n  FROM orders WHERE status = 'completed'\n  GROUP BY customer_id)\nSELECT ROUND(100.0 * SUM(CASE WHEN n >= 2 THEN 1 ELSE 0 END)\n       / COUNT(*), 1) AS tekrar_orani\nFROM c;"},
+{id:"q25",lv:"Zor",g:"Window frame",t:"3 aylık hareketli ortalama",tb:["orders"],q:"Aylık cironun, o ay ve önceki 2 ayın ortalamasını hesapla.",h:"ROWS BETWEEN 2 PRECEDING AND CURRENT ROW.",s:"WITH m AS (\n  SELECT {{MONTH}} AS ay, SUM(amount) AS ciro\n  FROM orders WHERE status = 'completed'\n  GROUP BY {{MONTH}})\nSELECT ay, ciro,\n  AVG(1.0 * ciro) OVER (ORDER BY ay\n    ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS ort3\nFROM m;"},
+{id:"q26",xc:["dept","medyan"],x:[["Finans",56000],["IT",65000],["Yönetim",90000]],lv:"Zor",g:"Medyan",t:"Departman bazında medyan maaş",tb:["employees"],q:"Her departmanın medyan maaşını bul.",h:"PERCENTILE_CONT(0.5); SQL Server'da OVER gerekir. Tarayıcı motoru (SQLite) bu fonksiyonu bilmez; kendi veritabanında deneyip elle işaretle.",s:"SELECT dept,\n  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) AS medyan\nFROM employees\nGROUP BY dept;",m:"SELECT DISTINCT dept,\n  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary)\n    OVER (PARTITION BY dept) AS medyan\nFROM employees;"},
+{id:"q27",lv:"Zor",g:"Self join",t:"Birlikte satın alınan ürün çiftleri",tb:["order_items","products"],q:"Aynı siparişte birlikte bulunan ürün çiftlerini ve kaç siparişte birlikte geçtiklerini listele.",h:"order_items'ı kendisiyle birleştir, a.product_id < b.product_id.",s:"SELECT p1.name AS urun1, p2.name AS urun2, COUNT(*) AS siparis\nFROM order_items a\nJOIN order_items b ON a.order_id = b.order_id\n                  AND a.product_id < b.product_id\nJOIN products p1 ON p1.id = a.product_id\nJOIN products p2 ON p2.id = b.product_id\nGROUP BY p1.name, p2.name\nORDER BY siparis DESC;"},
+{id:"q28",lv:"Zor",g:"Recursive CTE",t:"Yöneticinin tüm astları",tb:["employees"],q:"id=1 olan yöneticinin altındaki tüm çalışanları ve kaçıncı seviyede olduklarını listele.",h:"PostgreSQL'de WITH RECURSIVE, SQL Server'da yalnızca WITH.",s:"WITH{{REC}} t AS (\n  SELECT id, name, 1 AS seviye\n  FROM employees WHERE manager_id = 1\n  UNION ALL\n  SELECT e.id, e.name, t.seviye + 1\n  FROM employees e JOIN t ON e.manager_id = t.id)\nSELECT * FROM t ORDER BY seviye;"},
+{id:"q29",lv:"Zor",g:"Pareto",t:"Cironun %80'ini oluşturan müşteriler",tb:["orders"],q:"Tamamlanan siparişlerde, kümülatif payı %80'e ulaşana kadar en çok harcayan müşterileri getir.",s:"WITH t AS (\n  SELECT customer_id, SUM(amount) AS toplam\n  FROM orders WHERE status = 'completed'\n  GROUP BY customer_id),\nc AS (\n  SELECT customer_id, toplam,\n    SUM(toplam) OVER (ORDER BY toplam DESC ROWS UNBOUNDED PRECEDING) AS kum,\n    SUM(toplam) OVER () AS genel\n  FROM t)\nSELECT customer_id, toplam\nFROM c\nWHERE kum - toplam < 0.8 * genel;"},
+{id:"q30",lv:"Zor",g:"Tarih üretme",t:"Siparişsiz günler dahil günlük ciro",tb:["orders"],q:"1-10 Ocak 2025 arasındaki her gün için tamamlanan sipariş cirosunu göster; siparişsiz günler 0 olsun.",h:"Önce bir tarih serisi üret (generate_series veya recursive CTE), sonra LEFT JOIN.",s:"SELECT d::date AS gun, COALESCE(SUM(o.amount), 0) AS ciro\nFROM generate_series('2025-01-01'::date, '2025-01-10'::date, interval '1 day') d\nLEFT JOIN orders o ON o.order_date = d::date AND o.status = 'completed'\nGROUP BY d\nORDER BY d;",m:"WITH d AS (\n  SELECT CAST('2025-01-01' AS date) AS gun\n  UNION ALL\n  SELECT DATEADD(day, 1, gun) FROM d WHERE gun < '2025-01-10')\nSELECT d.gun, COALESCE(SUM(o.amount), 0) AS ciro\nFROM d\nLEFT JOIN orders o ON o.order_date = d.gun AND o.status = 'completed'\nGROUP BY d.gun\nORDER BY d.gun;"}
+].map(p=>Object.assign({a:"sql"},p));
+const OLD=[
+{id:"p1",a:"py",lv:"Kolay",g:"Counter",t:"Kelime frekansı",q:"Bir metindeki kelimeleri büyük/küçük harf duyarsız say, en sık 3 kelimeyi döndür.",h:"collections.Counter.",s:"from collections import Counter\n\ndef top3(text):\n    return Counter(text.lower().split()).most_common(3)"},
+{id:"p2",a:"py",lv:"Kolay",g:"set",t:"İlk tekrar eden eleman",q:"Listede ilk kez tekrar eden elemanı döndür, yoksa None.",h:"Görülenleri set'te tut.",s:"def first_dup(xs):\n    seen = set()\n    for x in xs:\n        if x in seen:\n            return x\n        seen.add(x)\n    return None"},
+{id:"p3",a:"py",lv:"Orta",g:"string",t:"Anagram kontrolü",q:"İki string anagram mı? Boşlukları ve harf büyüklüğünü yok say.",h:"Temizle, sırala, karşılaştır.",s:"def is_anagram(a, b):\n    c = lambda s: sorted(s.replace(' ', '').lower())\n    return c(a) == c(b)"},
+{id:"p4",a:"py",lv:"Orta",g:"dict",t:"Sözlük listesini gruplama",q:"[{'kat':'A','tutar':10}, ...] için kategori bazında toplam tutar sözlüğü döndür.",h:"defaultdict(int).",s:"from collections import defaultdict\n\ndef group_sum(rows):\n    out = defaultdict(int)\n    for r in rows:\n        out[r['kat']] += r['tutar']\n    return dict(out)"},
+{id:"p5",a:"py",lv:"Orta",g:"özyineleme",t:"İç içe listeyi düzleştir",q:"[1,[2,[3,4]],5] gibi listeyi [1,2,3,4,5] yap.",h:"Eleman liste ise fonksiyonu kendisi çağırsın.",s:"def flatten(xs):\n    out = []\n    for x in xs:\n        out.extend(flatten(x) if isinstance(x, list) else [x])\n    return out"},
+{id:"p6",a:"py",lv:"Orta",g:"regex",t:"Log satırından hata sayısı",q:"'2025-03-01 12:00:01 ERROR db timeout' biçimli satırlarda ERROR sayısını tarih bazında say.",h:"re.match ile tarih ve seviyeyi yakala.",s:"import re\nfrom collections import Counter\n\ndef errors_per_day(lines):\n    c = Counter()\n    for l in lines:\n        m = re.match(r'(\\d{4}-\\d{2}-\\d{2}) \\S+ (\\w+)', l)\n        if m and m.group(2) == 'ERROR':\n            c[m.group(1)] += 1\n    return c"},
+{id:"p7",a:"py",lv:"Orta",g:"hash map",t:"İki sayının toplamı",q:"Listede toplamı hedefe eşit olan iki elemanın indekslerini döndür.",h:"Sözlükte gördüğün sayıların indeksini sakla.",s:"def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        if target - n in seen:\n            return seen[target - n], i\n        seen[n] = i"},
+{id:"p8",a:"py",lv:"Zor",g:"dekoratör",t:"Süre ölçen dekoratör",q:"Bir fonksiyonun çalışma süresini yazdıran @timed dekoratörü yaz.",h:"functools.wraps ve time.perf_counter.",s:"import time, functools\n\ndef timed(fn):\n    @functools.wraps(fn)\n    def wrap(*a, **k):\n        t = time.perf_counter()\n        r = fn(*a, **k)\n        print(f'{fn.__name__}: {time.perf_counter()-t:.4f}s')\n        return r\n    return wrap"},
+{id:"d1",a:"pd",lv:"Kolay",g:"groupby",t:"Kategori bazında ilk 3",q:"df(kategori, urun, satis). Her kategoride en çok satan 3 ürünü getir.",h:"sort_values, groupby().head(3).",s:"top = (df.sort_values('satis', ascending=False)\n         .groupby('kategori').head(3))"},
+{id:"d2",a:"pd",lv:"Orta",g:"temizleme",t:"Grup medyanıyla eksik doldurma",q:"df(bolge, fiyat). fiyattaki NaN değerleri kendi bölgesinin medyanıyla doldur.",h:"groupby + transform.",s:"df['fiyat'] = df['fiyat'].fillna(\n    df.groupby('bolge')['fiyat'].transform('median'))"},
+{id:"d3",a:"pd",lv:"Orta",g:"pivot",t:"Aylık x bölge pivot tablosu",q:"df(tarih, bolge, ciro). Satırda ay, sütunda bölge olan toplam ciro tablosu.",h:"Ayı çıkar, pivot_table kullan.",s:"df['ay'] = pd.to_datetime(df['tarih']).dt.to_period('M')\npv = df.pivot_table(index='ay', columns='bolge',\n                    values='ciro', aggfunc='sum', fill_value=0)"},
+{id:"d4",a:"pd",lv:"Orta",g:"merge",t:"Eşleşmeyen kayıtlar (anti-join)",q:"orders ve customers DataFrame'lerinde müşterisi customers'ta olmayan siparişleri bul.",h:"merge(indicator=True).",s:"m = orders.merge(customers, left_on='customer_id',\n                 right_on='id', how='left', indicator=True)\nmissing = m[m['_merge'] == 'left_only']"},
+{id:"d5",a:"pd",lv:"Orta",g:"zaman serisi",t:"7 günlük hareketli ortalama",q:"df(tarih, satis) günlük. 7 günlük hareketli ortalama sütunu ekle.",h:"Tarihe göre sırala, rolling(7).mean().",s:"df = df.sort_values('tarih')\ndf['ma7'] = df['satis'].rolling(7).mean()"},
+{id:"d6",a:"pd",lv:"Zor",g:"aykırı değer",t:"IQR ile aykırı değerler",q:"df['tutar'] içinde IQR yöntemiyle aykırı değerleri listele.",h:"Q1-1.5·IQR ve Q3+1.5·IQR sınırları.",s:"q1, q3 = df['tutar'].quantile([.25, .75])\niqr = q3 - q1\nmask = (df['tutar'] < q1-1.5*iqr) | (df['tutar'] > q3+1.5*iqr)\noutliers = df[mask]"},
+{id:"t1",a:"st",lv:"Kolay",g:"özet metrik",t:"Ortalama mı medyan mı?",q:"Maaş verisinde birkaç çok yüksek değer var. Tipik maaşı anlatmak için hangisi daha uygun ve neden?",h:"Uç değerler hangisini daha çok etkiler?",s:"Medyan. Ortalama uç değerlere duyarlıdır ve yukarı çekilir; medyan sıralamadaki ortadaki değer olduğu için dayanıklıdır."},
+{id:"t2",a:"st",lv:"Kolay",g:"p-değeri",t:"p-değeri ne demek?",q:"A/B testinde p = 0.03 çıktı. Bu neyi söyler, neyi söylemez?",h:"Yanlış yorum: 'B'nin daha iyi olma olasılığı %97'.",s:"Fark gerçekte yokken (H0 doğruyken) bu kadar veya daha uç bir fark görme olasılığı %3. Etkinin büyüklüğünü ya da B'nin daha iyi olma olasılığını söylemez."},
+{id:"t3",a:"st",lv:"Orta",g:"A/B testi",t:"Dönüşüm oranı testi",q:"A: 10.000 ziyaretçi, 500 dönüşüm. B: 10.000 ziyaretçi, 560 dönüşüm. Fark anlamlı mı? Python ile test et.",h:"İki oran için z-testi (statsmodels).",s:"from statsmodels.stats.proportion import proportions_ztest\nstat, p = proportions_ztest([560, 500], [10000, 10000])\nprint(p)  # ~0.06 → %5 düzeyinde anlamlı değil"},
+{id:"t4",a:"st",lv:"Orta",g:"nedensellik",t:"Korelasyon nedensellik midir?",q:"Dondurma satışı ile boğulma vakaları birlikte artıyor. Bunu yöneticiye nasıl açıklarsın?",h:"Ortak neden (karıştırıcı değişken) ara.",s:"Sıcak hava iki değişkeni de artırıyor (karıştırıcı değişken). Korelasyon birlikte hareketi gösterir, bir değişkenin diğerine neden olduğunu göstermez; bunun için deney ya da kontrollü analiz gerekir."},
+{id:"t5",a:"st",lv:"Zor",g:"Simpson",t:"Simpson paradoksu",q:"Bir kampanya genel dönüşümü düşürmüş görünüyor ama her segmentte artırmış. Bu nasıl olabilir?",h:"Segmentlerin trafik payları değişmiş olabilir.",s:"Segment karışımı değişti: düşük dönüşümlü segment trafikte pay kazandıysa genel oran düşer, her segment içinde oran artsa bile. Karar için segment kırılımına ve ağırlıklara bak."},
+];
+
+const STORY={
+q31:["Diyelim ki sana bir sosyal medya platformunun tweet verileri verildi. 2022 yılında kullanıcı başına atılan tweet sayısının histogramını çıkaran bir sorgu yaz. Kullanıcı başına tweet sayısını tweet_bucket, o sayıya sahip kullanıcıların adedini users_num olarak döndür.\n\nBaşka bir deyişle, kullanıcıları 2022'de attıkları tweet sayısına göre grupla ve her gruptaki kullanıcıları say.","Örnek çıktıya göre 2022'de yalnızca 1 tweet atan iki kullanıcı (148 ve 254) ve 2 tweet atan bir kullanıcı (111) var. 30 Aralık 2021 tarihli tweet 2022'ye girmediği için sayılmaz."],
+q1:["Bir şirketin İK ekibi, teknoloji birimindeki maaş dengesini gözden geçiriyor. Sana çalışanların tutulduğu employees tablosu verildi.\n\nIT departmanında çalışanların adını ve maaşını, en yüksek maaştan en düşüğe doğru sıralayarak listele.","IT'de üç kişi var. Mert Demir 70.000 ile en üstte; Elif ve Can aynı maaşı aldığı için art arda gelir."],
+q2:["Pazarlama ekibi yeni kampanyayı hangi şehirlerde yapacağına karar veriyor ve şehirlerin ne kadar kalabalık olduğunu görmek istiyor. Elinde customers tablosu var.\n\nŞehri bilinen müşterileri şehir bazında say ve en kalabalık şehri en üstte göster.","İstanbul'da 2, İzmir ve Ankara'da birer müşteri var. Berk'in şehri boş (NULL) olduğu için sayıma girmez."],
+q3:["Finans ekibi ay sonu raporunu hazırlıyor ve gerçekten tahsil edilen cirodan emin olmak istiyor. İptal edilen siparişler cirodan sayılmaz.\n\nDurumu 'completed' olan siparişlerin toplam tutarını bul.","Tek iptal sipariş 800 tutarındaki 3 numaralı sipariş. Diğer siparişlerin toplamı 6.050 eder."],
+q4:["Mağaza vitrininde en değerli 3 ürünü öne çıkaracaksın. Elinde fiyatların yer aldığı products tablosu var.\n\nFiyatı en yüksek 3 ürünün adını ve fiyatını pahalıdan ucuza doğru listele.","Kahve Makinesi (2200), Kulaklık (1500) ve Klavye (800) katalogdaki en pahalı üç üründür."],
+q5:["Yönetim departmanlar arasındaki maaş farklarını görmek istiyor. Sana employees tablosu verildi.\n\nHer departmanın ortalama maaşını hesapla ve en yüksek ortalamadan en düşüğe doğru sırala.","Yönetim tek kişilik olduğu için ortalaması 90.000. IT'de 70.000, 65.000 ve 65.000'in ortalaması yaklaşık 66.667; Finans'ta 56.000."],
+q6:["Müşteri deneyimi ekibi, kayıt olup hiç alışveriş yapmamış müşterilere hatırlatma e-postası gönderecek. Elinde customers ve orders tabloları var.\n\nHiç siparişi olmayan müşterilerin id ve adını bul.","Deniz kayıtlı ama orders tablosunda hiç satırı yok; diğer müşterilerin en az bir siparişi var."],
+q7:["Sadakat programına alınacak müşteriler seçiliyor: en az 1000'lik alışveriş yapmış olmak gerekiyor ve iptal edilen siparişler sayılmıyor.\n\nTamamlanan siparişlerinin toplamı 1000'den büyük olan müşterilerin id'sini ve toplamını listele.","1 numaralı müşteri 1200 + 300 + 900 = 2400, 2 numaralı müşteri iptal edilen 800'ü saymadan 2500 harcamış. 3 ve 4 numaralı müşteriler 1000'in altında kaldı."],
+q8:["CRM ekibi müşterileri harcamalarına göre üç segmente ayırmak istiyor: Gold, Silver ve Bronze.\n\nMüşteri başına tamamlanan sipariş toplamı 2000 ve üzeriyse 'Gold', 1000-1999 arasıysa 'Silver', altındaysa 'Bronze' olarak etiketle.","1 ve 2 numaralı müşteriler 2400 ve 2500 ile Gold, 3 ve 4 numaralı müşteriler 400 ve 750 ile Bronze. Bu örnekte Silver'a düşen müşteri yok."],
+q9:["Katalog yöneticisi her kategorinin ne kadar geniş ve ne kadar pahalı olduğunu görmek istiyor. Sana products tablosu verildi.\n\nHer kategori için ürün sayısını ve ortalama fiyatı (yuvarlanmış) göster.","Elektronik kategorisinde 2 ürün var (1500 ve 800), ortalama fiyat 1150."],
+q10:["Operasyon ekibi iptal oranından endişeli ve bunu tek bir sayıyla görmek istiyor. Elinde orders tablosu var.\n\nSiparişlerin yüzde kaçının iptal edildiğini bir ondalık basamakla hesapla.","8 siparişin 1'i iptal edilmiş, yani oran %12,5."],
+q11:["Büyüme ekibi, müşterilerin ilk alışverişte ne kadar harcadığını inceliyor. Sana orders tablosu verildi.\n\nHer müşterinin tarihe göre ilk siparişini, sipariş sütunlarıyla (id, customer_id, amount, order_date, status) getir.","Her müşteri için tek satır döner. Örneğin 1 numaralı müşterinin ilk siparişi 2 Ocak tarihli 1200'lük siparişidir."],
+q12:["Finans ekibi ay ay ciro grafiği çizecek. Sana orders tablosu verildi.\n\nTamamlanan siparişlerin aylık toplamını, ayın ilk günü (ay) ve ciro sütunlarıyla listele.","Ocak 1900, Şubat 2650 ve Mart 1500 ciro getirmiş."],
+q13:["Yönetim aylık büyümeyi yüzdeyle görmek istiyor. Elinde orders tablosu var.\n\nAylık ciroyu ve bir önceki aya göre yüzde değişimi hesapla. İlk ayın önceki ayı olmadığı için değişim NULL kalır.","Şubat cirosu 2650, Ocak'a (1900) göre %39,5 arttı. Mart 1500'e düşerek %43,4 geriledi."],
+q14:["Satış ekibi hedefe ne kadar yaklaştığını izlemek istiyor. Sana orders tablosu verildi.\n\nSipariş olan her günün cirosunu ve o güne kadarki kümülatif cirosunu göster (yalnızca tamamlanan siparişler).","5 Ocak'ta günlük ciro 300, kümülatif 1200 + 300 = 1500. 9 Ocak'ta kümülatif 1900 olur."],
+q15:["İK maaş bandı analizinde 'ikinci en yüksek maaşı' kimlerin aldığına bakıyor. Elinde employees tablosu var.\n\nHer departmanda ikinci en yüksek maaşı alan çalışanları getir. Aynı maaşı alanlar aynı sırayı paylaşır.","IT'de en yüksek maaş 70.000, ikinci sırada 65.000 ile Elif ve Can yer alır. Finans'ta ikinci sıra 52.000 ile Burak'ın. Yönetim'de tek maaş olduğu için listede yok."],
+q16:["Organizasyon şemasını çıkarıyorsun. Her çalışanın bağlı olduğu kişinin id'si manager_id sütununda tutuluyor.\n\nHer çalışanın adını ve yöneticisinin adını listele. Yöneticisi olmayan çalışan da listede görünsün.","Ayşe Kaya'nın manager_id değeri NULL olduğu için yöneticisi boş görünür. Burak Çelik'in yöneticisi Zeynep Aydın."],
+q17:["Maaş denetiminde şirket ortalamasının üzerinde kazananlar inceleniyor. Sana employees tablosu verildi.\n\nŞirket genelindeki ortalama maaştan yüksek maaş alan çalışanları bul.","Ortalama maaş 67.000. Yalnızca Ayşe Kaya (90.000) ve Mert Demir (70.000) bu değerin üstünde."],
+q18:["Kategori yöneticileri her kategorinin 'amiral gemisi' ürününü belirliyor. Elinde products tablosu var.\n\nHer kategorinin en pahalı ürününü getir.","Elektronik'te Kulaklık (1500), Ev'de Kahve Makinesi (2200), Kırtasiye'de Poster (90) öne çıkar."],
+q19:["Bir VIP etkinliği için en çok harcayan müşteriler davet edilecek. Sana customers ve orders tabloları verildi.\n\nTamamlanan siparişlere göre en çok harcayan ilk 3 müşterinin adını ve toplam harcamasını getir.","Ayla 2500 ile birinci, Ali 2400 ile ikinci, Cem 750 ile üçüncü."],
+q20:["Depo ekibi hangi ürünlerin hızlı satıldığını, hangilerinin rafta beklediğini görmek istiyor. Elinde products ve order_items tabloları var.\n\nHer ürünün toplam satış adedini göster. Hiç satılmayan ürünler 0 olarak görünsün.","Poster hiç satılmadığı için 0. Klavye, Termos ve Defter üçer adetle en çok satılanlar."],
+q21:["E-posta kampanyası için müşteri listesi hazırlanıyor ama bazı müşterilerin şehri boş. Sana customers tablosu verildi.\n\nMüşteri adını ve şehrini listele; şehri boş olanlar için 'Bilinmiyor' yaz.","Berk'in şehri NULL olduğu için 'Bilinmiyor' olarak görünür."],
+q22:["Kişiselleştirme ekibi müşterilerin en büyük iki alışverişini inceleyecek. Elinde orders tablosu var.\n\nHer müşterinin tutarı en yüksek 2 siparişini sipariş sütunlarıyla (id, customer_id, amount, order_date, status) getir.","1 numaralı müşterinin en yüksek siparişleri 1200 ve 900. 3 numaralı müşterinin tek siparişi olduğu için bir satır döner."],
+q23:["Ürün ekibi, uygulamaya üst üste en az 3 gün giren 'alışkanlık sahibi' kullanıcıları arıyor. logins tablosunda kullanıcı başına günde en fazla bir kayıt var.\n\nEn az 3 ardışık gün giriş yapan kullanıcıları bul.","1 numaralı kullanıcı 1, 2 ve 3 Mart'ta girmiş. 2 numaralı kullanıcı 3 ve 4 Mart'ta girdi ama serisi 2 günde kaldı."],
+q24:["Pazarlama, müşterilerin ne kadarının geri geldiğini ölçmek istiyor. Sana orders tablosu verildi.\n\nTamamlanmış siparişi olan müşterilerin yüzde kaçı en az 2 tamamlanmış sipariş vermiş?","Tamamlanmış siparişi olan 4 müşteriden 1 ve 4 numaralı müşteriler 2'den fazla sipariş vermiş, oran %50."],
+q25:["Finans ekibi aylık dalgalanmayı yumuşatmak için hareketli ortalamaya bakıyor. Elinde orders tablosu var.\n\nHer ay için, o ay ve önceki iki ayın (tamamlanan siparişler) cirosunun ortalamasını hesapla.","Mart için ortalama (1900 + 2650 + 1500) / 3 ≈ 2016,67. Ocak'ta yalnızca kendisi olduğu için 1900."],
+q26:["İK, uç değerlerden etkilenmediği için medyan maaşı ortalamadan daha adil buluyor. Sana employees tablosu verildi.\n\nHer departmanın medyan maaşını hesapla.","Finans'ta iki kişi olduğu için medyan ikisinin ortası: 56.000. IT'de 65.000, Yönetim'de 90.000."],
+q27:["Öneri motoru için 'birlikte alınanlar' listesi hazırlanacak. Elinde order_items ve products tabloları var.\n\nAynı siparişte birlikte bulunan ürün çiftlerini ve kaç siparişte birlikte geçtiklerini listele. Her çift bir kez görünsün.","Kulaklık ve Klavye 1 ve 6 numaralı siparişlerde birlikte alınmış (2 sipariş). Kahve Makinesi ve Termos 4 numaralı siparişte birlikte."],
+q28:["Organizasyon şemasında bir yöneticinin tüm ekibini görmek istiyorsun; doğrudan bağlı olanlar ve onların altındakiler dahil. Sana employees tablosu verildi.\n\nid=1 olan yöneticinin altındaki tüm çalışanları ve kaçıncı seviyede olduklarını listele.","Mert ve Zeynep doğrudan Ayşe'ye bağlı (seviye 1). Elif ve Can Mert'in, Burak Zeynep'in altında olduğu için seviye 2."],
+q29:["Satış direktörü 'cironun %80'i hangi müşterilerden geliyor?' diye soruyor (Pareto analizi). Elinde orders tablosu var.\n\nTamamlanan siparişlerde müşterileri harcamaya göre büyükten küçüğe diz ve kümülatif pay %80'e ulaşana kadarki müşterileri getir.","Toplam ciro 6050. Ayla 2500 ile %41'e, Ali ile birlikte 4900 ile %81'e ulaşır. Ali eklenince %80 aşıldığı için ikisi listede; Cem ve Berk dışarıda."],
+q30:["Grafik ekibi günlük ciro çizgisinde sipariş olmayan günlerin de görünmesini istiyor; yoksa çizgide boşluklar oluşuyor. Sana orders tablosu verildi.\n\n1-10 Ocak 2025 arasındaki her gün için tamamlanan siparişlerin cirosunu göster. Sipariş olmayan günler 0 olsun.","2, 5 ve 9 Ocak'ta sipariş var (1200, 300 ve 400); diğer yedi gün 0."]};
+SQLP.forEach(p=>{const s=STORY[p.id];if(s){p.q=s[0];p.e=s[1]}});
+const P=SQLP.concat(OLD);
+//ENGINE-START
+let SQLJS=null;
+function balanced(s,i){let d=0;for(let k=i;k<s.length;k++){if(s[k]==="(")d++;else if(s[k]===")"){d--;if(!d)return k}}return -1}
+function splitArgs(s){const a=[];let d=0,c="";for(const ch of s){if(ch==="(")d++;else if(ch===")")d--;if(ch===","&&!d){a.push(c);c=""}else c+=ch}a.push(c);return a.map(x=>x.trim())}
+function callRewrite(sql,name,fn){const re=new RegExp("\\b"+name+"\\s*\\(","ig");let m;while((m=re.exec(sql))){const o=m.index+m[0].length-1,c=balanced(sql,o);if(c<0)break;const rep=fn(splitArgs(sql.slice(o+1,c)));if(rep==null){re.lastIndex=m.index+m[0].length;continue}sql=sql.slice(0,m.index)+rep+sql.slice(c+1);re.lastIndex=m.index}return sql}
+function toSqlite(sql){sql=sql.replace(/--.*$/gm,"").replace(/[;\s]+$/,"");
+ sql=sql.replace(/::\s*(date|int|integer)\b/ig,"").replace(/\bGETDATE\s*\(\s*\)/ig,"date('now')").replace(/\bISNULL\s*\(/ig,"IFNULL(").replace(/\bLEN\s*\(/ig,"LENGTH(");
+ sql=callRewrite(sql,"DATE_TRUNC",a=>/month/i.test(a[0])?`date(${a[1]},'start of month')`:null);
+ sql=sql.replace(/DATEFROMPARTS\s*\(\s*YEAR\s*\(\s*([\w.]+)\s*\)\s*,\s*MONTH\s*\(\s*\1\s*\)\s*,\s*1\s*\)/ig,"date($1,'start of month')");
+ sql=callRewrite(sql,"DATEADD",a=>a.length===3?`date(${a[2]}, (${a[1]}) || ' ${/month/i.test(a[0])?"months":"days"}')`:null);
+ sql=(function(s){const re=/([A-Za-z_][\w.]*(?:date|tarih|gun|day)\w*)\s*-\s*CAST\s*\(/ig;let m;while((m=re.exec(s))){const o=m.index+m[0].length-1,c=balanced(s,o);if(c<0)break;const inner=s.slice(o+1,c).replace(/\s+AS\s+INT(EGER)?\s*$/i,"");s=s.slice(0,m.index)+`date(${m[1]}, '-' || (${inner}) || ' days')`+s.slice(c+1);re.lastIndex=m.index}return s})(sql);
+ sql=callRewrite(sql,"CAST",a=>{const m=a.length===1&&a[0].match(/^([\s\S]*)\s+AS\s+(date|datetime)$/i);return m?m[1]:null});
+ let top=null;sql=sql.replace(/\bSELECT\s+TOP\s+(\d+)\s+/i,(_,n)=>{top=n;return"SELECT "});if(top)sql+=" LIMIT "+top;return sql}
+function runSQL(user){const db=new SQLJS.Database();try{for(const n in D){const t=D[n];db.run(`CREATE TABLE ${n}(${t.c.map(c=>c[0]+" "+(c[1]==="int"?"INTEGER":"TEXT")).join(",")})`);const st=db.prepare(`INSERT INTO ${n} VALUES(${t.c.map(()=>"?").join(",")})`);t.r.forEach(r=>st.run(r));st.free()}
+ const res=db.exec(toSqlite(user)),r=res[res.length-1];return r?{cols:r.columns,rows:r.values}:{cols:[],rows:[]}}finally{db.close()}}
+function topOrdered(sql){let s=sql,i;while((i=s.indexOf("("))>=0){const c=balanced(s,i);if(c<0)break;s=s.slice(0,i)+" "+s.slice(c+1)}return/\bORDER\s+BY\b/i.test(s)}
+const norm=v=>v===null?"NULL":typeof v==="number"?String(Math.round(v*1e4)/1e4):String(v);
+function cmp(e,g,ord){if(e.rows.length!==g.rows.length)return`Satır sayısı farklı: beklenen ${e.rows.length}, senin sonucun ${g.rows.length}.`;
+ if(e.rows.length&&e.rows[0].length!==g.rows[0].length)return`Kolon sayısı farklı: beklenen ${e.rows[0].length}, senin sonucun ${g.rows[0].length}.`;
+ const f=r=>r.map(norm).join("|"),a=e.rows.map(f),b=g.rows.map(f);if(!ord){a.sort();b.sort()}
+ return a.every((x,i)=>x===b[i])?null:"Değerler beklenen sonuçla uyuşmuyor."+(ord?" Sıralamayı da kontrol et.":"")}
+const EXP={};
+function expected(p){if(p.id in EXP)return EXP[p.id];let r=null;try{if(p.x)r={cols:p.xc||[],rows:p.x,ord:false};else{const s=sol(p,"ms");r=runSQL(s);r.ord=topOrdered(s)}}catch(e){r=null}return EXP[p.id]=r}
+//ENGINE-END
+
+let S={topics:{},solved:{},notes:{},days:{}},area="sql",lvl="Hepsi",stt="Hepsi",term="",cur=null,DL="pg",DB=null,PATH="",tm=0;
+try{const r=localStorage.getItem("sd-v3");if(r)S=Object.assign(S,JSON.parse(r));DL=localStorage.getItem("sd-dl")||"pg"}catch(e){}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const today=()=>new Date().toISOString().slice(0,10);
+function setSync(m){$("sync").textContent=m==="ok"?"Hesabına senkronlanıyor":m==="err"?"Senkron hatası, yerel kayıt var":"Yalnızca bu tarayıcıda saklanıyor"}
+function save(){try{localStorage.setItem("sd-v3",JSON.stringify(S))}catch(e){}
+ if(DB){clearTimeout(tm);tm=setTimeout(()=>DB.doc(PATH).set(JSON.parse(JSON.stringify(S))).then(()=>setSync("ok")).catch(()=>setSync("err")),700)}}
+function merge(r){if(!r)return;for(const k of["topics","solved"])for(const i in r[k]||{})if(r[k][i])S[k][i]=true;
+ for(const d in r.days||{})S.days[d]=Math.max(S.days[d]||0,r.days[d]);S.notes=Object.assign({},r.notes||{},S.notes)}
+function streak(){let n=0,d=new Date();if(!S.days[today()])d.setDate(d.getDate()-1);while(S.days[d.toISOString().slice(0,10)]>0){n++;d.setDate(d.getDate()-1)}return n}
+function pieBg(){const tot=P.length;let a=0,st=[];for(const k in AREAS){const c=AREAS[k].c,ps=P.filter(x=>x.a===k),w=ps.length/tot*100,f=ps.filter(x=>S.solved[x.id]).length/ps.length*w;st.push(`${c} ${a}% ${a+f}%`,`${c}30 ${a+f}% ${a+w}%`);a+=w}return`conic-gradient(${st.join(",")})`}
+const mini=(c,p)=>`conic-gradient(${c} 0 ${p}%,${c}30 0)`;
+function sol(p,d){d=d||DL;let ms=d==="ms",s=ms&&p.m?p.m:p.s;
+ return s.replace(/\{\{TOP (\d+)\}\}/g,(_,n)=>ms?`TOP ${n} `:"").replace(/\{\{LIMIT (\d+)\}\}/g,(_,n)=>ms?"":` LIMIT ${n}`).replace(/\{\{REC\}\}/g,ms?"":" RECURSIVE").replace(/\{\{MONTH\}\}/g,ms?"DATEFROMPARTS(YEAR(order_date), MONTH(order_date), 1)":"DATE_TRUNC('month', order_date)")}
+const diff=p=>p.a==="sql"&&(!!p.m||/\{\{/.test(p.s));
+const TY={int:"integer",varchar:"string",date:"date",timestamp:"timestamp"};
+const tbl=n=>{const t=D[n];return`<div class="tw"><div class="tn">${n} Tablosu:</div><div class="sc"><table><thead><tr><th>Sütun Adı</th><th>Tip</th></tr></thead><tbody>${t.c.map(c=>`<tr><td>${c[0]}</td><td>${TY[c[1]]||c[1]}</td></tr>`).join("")}</tbody></table></div><div class="tn" style="margin-top:12px">${n} Örnek Girdi:</div><div class="sc"><table><thead><tr>${t.c.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead><tbody>${t.r.map(r=>`<tr>${r.map(v=>`<td>${v===null?"<i>NULL</i>":esc(v)}</td>`).join("")}</tbody></tr>`.replace("</tbody></tr>","</tr>")).join("")}</tbody></table></div></div>`};
+const dlBtn=()=>`<div class="seg" role="group" aria-label="SQL sistemi"><button type="button" data-dl="pg" aria-pressed="${DL==="pg"}">PostgreSQL</button><button type="button" data-dl="ms" aria-pressed="${DL==="ms"}">SQL Server</button></div>`;
+function head(){$("dl").innerHTML=dlBtn().replace(/^<div[^>]*>|<\/div>$/g,"")}
+function home(){const A=AREAS[area],ps=P.filter(x=>x.a===area),d=TOPICS[area].filter((_,i)=>S.topics[area+i]).length;
+ const sv=P.filter(p=>S.solved[p.id]).length,st=streak();
+ $("root").innerHTML=`<section class="hero2"><div class="hb"><span class="chip dk">Pratik platformu</span><div><h1>SQL, Python ve veri analizi pratiği</h1><p>${st?st+" gündür üst üste çalışıyorsun.":"Bugün bir soru çöz, seri başlasın."} SQL soruları tarayıcıda çalışır ve sonucun beklenen çıktıyla karşılaştırılır.</p></div>
+ <div class="stats"><div><small>Toplam soru</small><b>${P.length}</b></div><div><small>Çözülen</small><b class="g">${sv}</b></div><div><small>Başarı oranı</small><b class="bl">%${Math.round(sv/P.length*100)}</b></div></div></div>
+ <div class="pc"><b>Alan bazında ilerleme</b><div class="pie" style="--bg:${pieBg()}" role="img" aria-label="Genel ilerleme"><div><span><b>${Math.round(sv/P.length*100)}%</b><br><small>${sv}/${P.length}</small></span></div></div>
+ <div class="lg">${Object.keys(AREAS).map(k=>`<span><i style="background:${AREAS[k].c}"></i>${AREAS[k].n}</span>`).join("")}</div></div></section>
+ <div class="cards" style="margin-bottom:18px">${Object.keys(AREAS).map(k=>{const q=P.filter(x=>x.a===k),s=q.filter(x=>S.solved[x.id]).length;return`<button type="button" class="ac" style="--c:${AREAS[k].c}" data-a="${k}" aria-pressed="${k===area}"><span class="mp" style="background:${mini(AREAS[k].c,s/q.length*100)}"></span><span><b>${AREAS[k].n}</b><small>${s}/${q.length} soru</small></span></button>`}).join("")}</div>
+ <h2 style="margin:0 0 4px">${A.n}</h2><p class="sub" style="margin:0 0 12px">${A.d}</p>
+ <details class="tp" style="--c:${A.c}"><summary>Konu listesi (${d}/${TOPICS[area].length})</summary><div class="tl">${TOPICS[area].map((t,i)=>`<label><input type="checkbox" data-k="${area+i}" ${S.topics[area+i]?"checked":""}><span>${esc(t)}</span></label>`).join("")}</div></details>
+ <div class="bar"><input type="search" id="q" value="${esc(term)}" placeholder="Soru veya konu ara" aria-label="Ara">
+ ${["Hepsi","Kolay","Orta","Zor"].map(x=>`<button type="button" class="chip" style="padding:6px 12px;border:1px solid var(--line);${lvl===x?"background:"+A.c+";color:#fff":""}" data-l="${x}">${x}</button>`).join("")}
+ ${["Hepsi","Bekleyen","Çözülen"].map(x=>`<button type="button" class="chip" style="padding:6px 12px;border:1px solid var(--line);${stt===x?"background:#0f172a;color:#fff":""}" data-s="${x}">${x}</button>`).join("")}</div><div id="probs"></div>`;
+ probs()}
+function probs(){const A=AREAS[area],t=term.toLowerCase(),L=P.filter(p=>p.a===area&&(lvl==="Hepsi"||p.lv===lvl)&&(stt==="Hepsi"||(stt==="Çözülen")===!!S.solved[p.id])&&(!t||(p.t+p.g+p.q).toLowerCase().includes(t)));
+ $("probs").innerHTML=L.length?L.map(p=>`<button type="button" class="row ${S.solved[p.id]?"ok":""}" style="--c:${A.c}" data-open="${p.id}"><span class="dot"></span><span class="rt">${esc(p.t)}<small>${esc(p.g)}</small></span><span class="chip">${p.a==="sql"?(diff(p)?"PG · MSSQL (farklı sözdizimi)":"PG · MSSQL"):A.n}</span><span class="lv ${p.lv}">${p.lv}</span></button>`).join(""):'<div class="empty">Bu filtrelerde soru yok. Filtreleri gevşet.</div>'}
+const resTbl=r=>`<div class="sc"><table><thead><tr>${r.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${r.rows.slice(0,50).map(x=>`<tr>${x.map(v=>`<td>${v===null?"<i>NULL</i>":esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+const msg=(k,t)=>`<div class="vd ${k}">${t}</div>`;
+function solve(){const p=P.find(x=>x.id===cur),A=AREAS[p.a],L=P.filter(x=>x.a===p.a),nx=L[(L.indexOf(p)+1)%L.length],q=p.a==="sql",ex=q&&SQLJS?expected(p):null;
+ $("root").innerHTML=`<div class="bk"><button type="button" data-back>← Sorular</button><span class="chip">${A.n}</span><span class="lv ${p.lv}">${p.lv}</span><span class="chip" id="st">${S.solved[p.id]?"Çözüldü":""}</span></div>
+ <div class="split" style="--c:${A.c}"><section class="card"><h2>${esc(p.t)}</h2><div class="chips"><span class="chip">${esc(p.g)}</span>${q?'<span class="chip">PostgreSQL</span><span class="chip">SQL Server</span>':""}${diff(p)?'<span class="chip">Sözdizimi sisteme göre değişir</span>':""}</div>
+ ${esc(p.q).split("\n\n").map(x=>`<p>${x}</p>`).join("")}${p.tb?p.tb.map(tbl).join(""):""}
+ ${ex?`<div class="tn" style="margin-top:14px">Örnek Çıktı:</div>${resTbl(ex)}`:""}
+ ${p.e?`<h3>Açıklama:</h3><p>${esc(p.e)}</p>`:""}
+ ${q?'<p class="note"><i>Bu tablolar örnek veridir. Gerçek bir veritabanında satırlar ve değerler farklı olabilir; sorgunu sabit değerlere göre değil mantığa göre yaz. Bu sayfadaki kontrol yalnızca yukarıdaki örnek verilerle yapılır.</i></p>':""}
+ ${p.h?`<details class="hint"><summary>İpucu</summary>${esc(p.h)}</details>`:""}</section>
+ <section class="card ed"><div class="eh"><b>${q?"SQL editörü":p.a==="py"?"Python editörü":"Cevap alanı"}</b>${q?dlBtn():""}</div>
+ <textarea id="ed" spellcheck="false" placeholder="Cevabını buraya yaz">${esc(S.notes[p.id]||"")}</textarea>
+ <div class="acts">${q?'<button type="button" data-run>Çalıştır</button><button type="button" class="p" data-sub>Gönder</button>':""}<button type="button" id="ts">Çözümü göster</button><button type="button" data-ok="${p.id}">${S.solved[p.id]?"Çözüldü işaretini kaldır":q?"Elle işaretle":"Çözdüm"}</button><button type="button" data-open="${nx.id}">Sonraki soru</button></div>
+ <div id="out" class="out"></div><div id="sl" class="out" hidden><pre>${esc(sol(p))}</pre></div>
+ <p class="note" style="color:#94a3b8">${q?(SQLJS?"Sorgular tarayıcıda SQLite ile çalışır; PostgreSQL / SQL Server sözdiziminin yaygın kısımları çevrilir.":"SQL motoru yükleniyor…"):"Bu soru türü otomatik kontrol edilmez; çözümle karşılaştırıp kendin işaretle."}</p></section></div>`;scrollTo(0,0)}
+function act(mode){const p=P.find(x=>x.id===cur),o=$("out"),code=$("ed").value.trim();
+ if(!SQLJS){o.innerHTML=msg("warn","SQL motoru yüklenemedi. Cevabını kendi veritabanında dene ve elle işaretle.");return}
+ if(!code){o.innerHTML=msg("warn","Önce bir sorgu yaz.");return}
+ let got;try{got=runSQL(code)}catch(e){o.innerHTML=msg("bad","Hata: "+esc(e.message)+((/syntax error/i.test(e.message)&&/PERCENTILE|WITHIN GROUP|generate_series|ILIKE|INTERVAL/i.test(code))||/no such (function|column)/i.test(e.message)?"<br><small>Bu tarayıcı motoru SQLite'tır; PostgreSQL / SQL Server'a özgü bazı fonksiyonlar yoktur. Kendi veritabanında deneyip elle işaretleyebilirsin.</small>":""));return}
+ const html=`<div class="ot">Senin sonucun (${got.rows.length} satır)</div>${resTbl(got)}`;
+ if(mode==="run"){o.innerHTML=msg("info","Sorgu çalıştı. Doğruluğu kontrol etmek için Gönder'e bas.")+html;return}
+ const ex=expected(p);if(!ex){o.innerHTML=msg("warn","Bu soru için otomatik kontrol yok. Elle işaretleyebilirsin.")+html;return}
+ const err=cmp(ex,got,ex.ord);
+ if(err){o.innerHTML=msg("bad","Yanlış. "+err)+html;return}
+ if(!S.solved[p.id]){S.solved[p.id]=true;const k=today();S.days[k]=(S.days[k]||0)+1;save()}
+ $("st").textContent="Çözüldü";o.innerHTML=msg("ok","Doğru! Sonucun beklenen çıktıyla eşleşiyor, ilerlemene kaydedildi.")+html}
+function render(){head();cur?solve():home()}
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+ if(d.a){area=d.a;lvl=stt="Hepsi";home()}
+ else if(d.l){lvl=d.l;home()}else if(d.s){stt=d.s;home()}
+ else if(d.open){cur=d.open;solve()}else if("back"in d){cur=null;home()}
+ else if(d.dl){DL=d.dl;try{localStorage.setItem("sd-dl",DL)}catch(x){}render()}
+ else if(d.ok){const id=d.ok,k=today();S.solved[id]=!S.solved[id];S.days[k]=Math.max(0,(S.days[k]||0)+(S.solved[id]?1:-1));save();solve()}
+ else if("run"in d)act("run");else if("sub"in d)act("sub");
+ else if(b.id==="ts")$("sl").hidden=!$("sl").hidden;
+ else if(b.id==="reset"&&confirm("Tüm ilerleme silinsin mi?")){S={topics:{},solved:{},notes:{},days:{}};save();cur=null;home()}
+ else if(b.id==="exp")exportJ()});
+document.addEventListener("change",e=>{const k=e.target.dataset.k;if(k){S.topics[k]=e.target.checked;save();home()}
+ if(e.target.id==="imp"&&e.target.files[0]){const f=new FileReader();f.onload=()=>{try{merge(JSON.parse(f.result));save();render()}catch(x){alert("Dosya okunamadı")}};f.readAsText(e.target.files[0])}});
+document.addEventListener("input",e=>{if(e.target.id==="ed"){S.notes[cur]=e.target.value;save()}if(e.target.id==="q"){term=e.target.value;probs()}});
+async function exportJ(){const data=JSON.stringify(S,null,2),fn="sorgu-defteri-yedek.json";
+ try{const d=window.claude&&await window.claude.use("downloads");if(d){await d.save({filename:fn,data});return}}catch(e){return}
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=fn;a.click()}
+setSync("local");render();
+if(typeof initSqlJs==="function")initSqlJs().then(s=>{SQLJS=s;if(cur&&!$("out").innerHTML)solve()}).catch(()=>{});
+window.addEventListener("load",async()=>{try{const c=window.claude;if(!c)return;const [u,db]=await Promise.all([c.use("user"),c.use("db")]);if(!u||!db)return;
+ const id=await u.id();if(!id)return;PATH=`data/users/${id}/progress`;const s=await db.doc(PATH).get();if(s.exists)merge(s.data());DB=db;setSync("ok");save();if(!cur)home()}catch(e){}});
+</script>
+</body>
+</html>
